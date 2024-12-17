@@ -40,13 +40,8 @@ public class AppStartup {
             User admin = new User()
                     .setName("Admin")
                     .setUsername("admin")
-                    .setPassword(passwordEncoder.encode("admin")); // Demo only!
-            Optional<Role> adminRoleOpt = roleRepository.findByName(RoleName.ADMIN);
-            if (adminRoleOpt.isPresent()) {
-                admin.setRoles(Set.of(adminRoleOpt.get()));
-            } else {
-                throw new RuntimeException("Role ADMIN not found.");
-            }
+                    .setPassword(passwordEncoder.encode("admin")) // Demo only!
+                    .setRole(roleRepository.findByName(RoleName.ADMIN));
             userRepository.save(admin);
         }
     }
