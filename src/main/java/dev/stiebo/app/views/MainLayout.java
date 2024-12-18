@@ -24,7 +24,6 @@ import com.vaadin.flow.theme.lumo.LumoUtility;
 import dev.stiebo.app.data.User;
 import dev.stiebo.app.security.AuthenticatedUser;
 
-import java.io.ByteArrayInputStream;
 import java.util.List;
 import java.util.Optional;
 
