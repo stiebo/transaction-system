@@ -35,7 +35,7 @@ public class AppStartup {
             }
         }
 
-        // create at least one Admin
+        // create demo users
         if (userRepository.count() == 0) {
             User admin = new User()
                     .setName("Admin")
@@ -43,6 +43,20 @@ public class AppStartup {
                     .setPassword(passwordEncoder.encode("admin")) // Demo only!
                     .setRole(roleRepository.findByName(RoleName.ADMIN));
             userRepository.save(admin);
+
+            User support = new User()
+                    .setName("Mr. Support")
+                    .setUsername("support")
+                    .setPassword(passwordEncoder.encode("support"))
+                    .setRole(roleRepository.findByName(RoleName.SUPPORT));
+            userRepository.save(support);
+
+            User merchant = new User()
+                    .setName("Ms. Merchant")
+                    .setUsername("merchant")
+                    .setPassword(passwordEncoder.encode("merchant"))
+                    .setRole(roleRepository.findByName(RoleName.MERCHANT));
+            userRepository.save(merchant);
         }
     }
 }
