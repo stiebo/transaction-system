@@ -28,7 +28,6 @@ public class SuspiciousIpsView extends Composite<VerticalLayout> {
     private SuspiciousIpsFilterAddNew filterAddNew;
     private final Grid<SuspiciousIp> grid;
 
-
     public SuspiciousIpsView(SuspiciousIpService service) {
         this.service = service;
 
