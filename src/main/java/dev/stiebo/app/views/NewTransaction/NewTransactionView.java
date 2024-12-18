@@ -17,6 +17,7 @@ import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import dev.stiebo.app.configuration.Region;
+import dev.stiebo.app.data.StolenCard;
 import dev.stiebo.app.data.Transaction;
 import dev.stiebo.app.dtos.PostTransactionFeedback;
 import dev.stiebo.app.services.TransactionService;
@@ -27,6 +28,8 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Random;
+
+import static dev.stiebo.app.data.StolenCard.luhnCheck;
 
 @PageTitle("New transaction")
 @Route("newtransaction")
@@ -86,7 +89,7 @@ public class NewTransactionView extends Composite<VerticalLayout> {
         binder.forField(numberField)
                 .asRequired("Number is required")
                 .withValidator(value -> value.matches("\\d+"), "Number must be numeric")
-                .withValidator(this::luhnCheck, "The number is not a valid credit card number.")
+                .withValidator(StolenCard::luhnCheck, "The number is not a valid credit card number.")
                 .bind(Transaction::getNumber, Transaction::setNumber);
 
         binder.forField(regionField)
@@ -172,29 +175,4 @@ public class NewTransactionView extends Composite<VerticalLayout> {
         return LocalDateTime.ofInstant(Instant.now().minusSeconds(random.nextLong(200_000_000L))
                 , ZoneId.systemDefault());
     }
-
-    private boolean luhnCheck(String number) {
-        if (number == null || number.isEmpty()) {
-            return false;
-        }
-        int n = number.length();
-        int total = 0;
-        boolean even = true;
-        // iterate from right to left, double every 'even' value
-        for (int i = n - 2; i >= 0; i--) {
-            int digit = number.charAt(i) - '0';
-            if (digit < 0 || digit > 9) {
-                // value may only contain digits
-                return false;
-            }
-            if (even) {
-                digit <<= 1; // double value
-            }
-            even = !even;
-            total += digit > 9 ? digit - 9 : digit;
-        }
-        int checksum = number.charAt(n - 1) - '0';
-        return (total + checksum) % 10 == 0;
-    }
-
 }
