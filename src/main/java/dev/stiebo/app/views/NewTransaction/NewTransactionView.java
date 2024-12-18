@@ -40,7 +40,6 @@ public class NewTransactionView extends Composite<VerticalLayout> {
     private final TextField amountField = new TextField("Amount");
     private final TextField ipField = new TextField("IP Address");
     private final TextField numberField = new TextField("Number");
-//    private final TextField regionField = new TextField("Region");
     private final ComboBox<Region> regionField = new ComboBox<>("Region");
     private final DateTimePicker dateField = new DateTimePicker("Transaction Date");
 
