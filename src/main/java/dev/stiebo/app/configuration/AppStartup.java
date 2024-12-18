@@ -8,9 +8,6 @@ import jakarta.annotation.PostConstruct;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
-import java.util.Set;
-
 @Component
 public class AppStartup {
 
