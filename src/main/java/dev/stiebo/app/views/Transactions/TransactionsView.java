@@ -29,14 +29,11 @@ public class TransactionsView extends Composite<VerticalLayout> {
     public TransactionsView(TransactionService transactionService) {
         this.transactionService = transactionService;
 
-        // Main layout configuration
         VerticalLayout layout = getContent();
         layout.setSizeFull();
 
-        // Create the Filter components
         filters = new TransactionsFilter(() -> refreshGrid(filters));
 
-        // Create the grid
         grid = new GridPro<>();
         grid.setWidthFull();
         grid.addColumn(new LocalDateTimeRenderer<>(
@@ -51,7 +48,7 @@ public class TransactionsView extends Composite<VerticalLayout> {
                     try {
                         transactionService.updateTransactionFeedback(transaction.getId(), newFeedback);
                         Notification.show("Feedback updated", 2000, Notification.Position.MIDDLE);
-                        // need to also update "in-memory"-Transaction with new Feedback
+                        // need to also update "in-memory"-Transaction with new Feedback to show on screen
                         transaction.setFeedback(newFeedback);
                     }
                     catch (Exception e) {
@@ -61,18 +58,10 @@ public class TransactionsView extends Composite<VerticalLayout> {
                 .setHeader("Feedback");
         grid.setEditOnClick(true);
 
-        // Add Filters and Grid to the main layout
         layout.add(filters, grid);
-
-        // Initial load of the data
         refreshGrid(filters);
     }
 
-    /**
-     * Refreshes the grid with the current filter values.
-     *
-     * @param filters the Filters instance containing filter input values
-     */
     private void refreshGrid(TransactionsFilter filters) {
         grid.setItems(query ->
                 transactionService.list(
