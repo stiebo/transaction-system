@@ -1,7 +1,6 @@
 package dev.stiebo.app.views.login;
 
 import com.vaadin.flow.component.html.Paragraph;
-import com.vaadin.flow.component.login.LoginI18n;
 import com.vaadin.flow.component.login.LoginOverlay;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
