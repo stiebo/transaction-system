@@ -1,7 +1,9 @@
 package dev.stiebo.app.services;
 
+import dev.stiebo.app.configuration.TransactionStatus;
 import dev.stiebo.app.data.*;
 import dev.stiebo.app.dtos.PostTransactionFeedback;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -37,36 +39,37 @@ public class TransactionService {
                 });
     }
 
+    @Transactional
     public PostTransactionFeedback postTransaction(Transaction transaction) {
-        String result;
+        TransactionStatus result;
         StringBuilder info = new StringBuilder();
 
         if (transaction.getAmount() <= transactionLimit.getMaxAllowed()) {
-            result = "ALLOWED";
+            result = TransactionStatus.ALLOWED;
             info.append("none");
         } else if (transaction.getAmount() <= transactionLimit.getMaxManual()) {
-            result = "MANUAL_PROCESSING";
+            result = TransactionStatus.MANUAL_PROCESSING;
             info.append("amount");
         } else {
-            result = "PROHIBITED";
+            result = TransactionStatus.PROHIBITED;
             info.append("amount");
         }
 
         if (stolenCardRepository.existsByNumber(transaction.getNumber())) {
-            if (result.equals("PROHIBITED")) {
+            if (result == TransactionStatus.PROHIBITED) {
                 info.append(", ");
             } else {
-                result = "PROHIBITED";
+                result = TransactionStatus.PROHIBITED;
                 info.setLength(0);
             }
             info.append("card-number");
         }
 
         if (suspiciousIPRepository.existsByIp(transaction.getIp())) {
-            if (result.equals("PROHIBITED")) {
+            if (result == TransactionStatus.PROHIBITED) {
                 info.append(", ");
             } else {
-                result = "PROHIBITED";
+                result = TransactionStatus.PROHIBITED;
                 info.setLength(0);
             }
             info.append("ip");
@@ -78,18 +81,18 @@ public class TransactionService {
                         transaction.getRegion());
 
         if (countTransactionsDiffRegion > 2) {
-            if (result.equals("PROHIBITED")) {
+            if (result == TransactionStatus.PROHIBITED) {
                 info.append(", ");
             } else {
-                result = "PROHIBITED";
+                result = TransactionStatus.PROHIBITED;
                 info.setLength(0);
             }
             info.append("region-correlation");
-        } else if (countTransactionsDiffRegion == 2 && !result.equals("PROHIBITED")) {
-            if (result.equals("MANUAL_PROCESSING")) {
+        } else if (countTransactionsDiffRegion == 2 && !(result == TransactionStatus.PROHIBITED)) {
+            if (result == TransactionStatus.MANUAL_PROCESSING) {
                 info.append(", ");
             } else {
-                result = "MANUAL_PROCESSING";
+                result = TransactionStatus.MANUAL_PROCESSING;
                 info.setLength(0);
             }
             info.append("region-correlation");
@@ -100,18 +103,18 @@ public class TransactionService {
                         transaction.getIp());
 
         if (countTransactionUniqueDiffIp > 2) {
-            if (result.equals("PROHIBITED")) {
+            if (result == TransactionStatus.PROHIBITED) {
                 info.append(", ");
             } else {
-                result = "PROHIBITED";
+                result = TransactionStatus.PROHIBITED;
                 info.setLength(0);
             }
             info.append("ip-correlation");
-        } else if (countTransactionUniqueDiffIp == 2 && !result.equals("PROHIBITED")) {
-            if (result.equals("MANUAL_PROCESSING")) {
+        } else if (countTransactionUniqueDiffIp == 2 && !(result == TransactionStatus.PROHIBITED)) {
+            if (result == TransactionStatus.MANUAL_PROCESSING) {
                 info.append(", ");
             } else {
-                result = "MANUAL_PROCESSING";
+                result = TransactionStatus.MANUAL_PROCESSING;
                 info.setLength(0);
             }
             info.append("ip-correlation");
@@ -119,127 +122,71 @@ public class TransactionService {
 
         transaction
                 .setResult(result)
-                .setFeedback("");
+                .setFeedback(null);
         transactionRepository.save(transaction);
         return new PostTransactionFeedback(result, info.toString());
     }
 
-//    public TransactionOutDto updateTransactionFeedback(UpdateTransactionFeedback feedback) {
-//        Transaction transaction = transactionRepository.findById(feedback.transactionId())
-//                .orElseThrow(TransactionNotFoundException::new);
-//        if (!transaction.getFeedback().isEmpty()) {
-//            throw new TransactionFeedbackAlreadyExistsException();
-//        }
-//
-//        // if validity equals feedback: exception
-//        if (transaction.getResult().equals(feedback.feedback())) {
-//            throw new TransactionFeedbackUnprocessableException();
-//        }
-//
-//        // save feedback into db
-//        transaction.setFeedback(feedback.feedback());
-//        transactionRepository.save(transaction);
-//
-//        // adjust limits
-//        if (transaction.getResult().equals("ALLOWED")) {
-//            // dec maxAllowed
-//            transactionLimit.setMaxAllowed(updateLimit(transactionLimit.getMaxAllowed(),
-//                    transaction.getAmount(), false));
-//            if (feedback.feedback().equals("PROHIBITED")) {
-//                // dec maxManual
-//                transactionLimit.setMaxManual(updateLimit(transactionLimit.getMaxManual(),
-//                        transaction.getAmount(), false));
-//            }
-//        } else if (transaction.getResult().equals("MANUAL_PROCESSING")) {
-//            if (feedback.feedback().equals("ALLOWED")) {
-//                // inc maxAllowed
-//                transactionLimit.setMaxAllowed(updateLimit(transactionLimit.getMaxAllowed(),
-//                        transaction.getAmount(), true));
-//            } else {
-//                // dec maxManual
-//                transactionLimit.setMaxManual(updateLimit(transactionLimit.getMaxManual(),
-//                        transaction.getAmount(), false));
-//            }
-//        } else {
-//            // inc Manual
-//            transactionLimit.setMaxManual(updateLimit(transactionLimit.getMaxManual(),
-//                    transaction.getAmount(), true));
-//            if (feedback.feedback().equals("ALLOWED")) {
-//                // inc maxAllowed
-//                transactionLimit.setMaxAllowed(updateLimit(transactionLimit.getMaxAllowed(),
-//                        transaction.getAmount(), true));
-//            }
-//        }
-//
-//        // save new limit
-//        transactionLimit = transactionLimitRepository.save(transactionLimit);
+    @Transactional
+    public void updateTransactionFeedback(Long id, TransactionStatus feedback) {
+        Transaction transaction = transactionRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Transaction not found."));
+        if (!(transaction.getFeedback() == null)) {
+            throw new RuntimeException("Feedback already existed");
+        }
+
+        // if validity equals feedback: exception
+        if (transaction.getResult() == feedback) {
+            throw new RuntimeException("Feedback cannot equal Result.");
+        }
+
+        // save feedback into db
+        transaction.setFeedback(feedback);
+        transactionRepository.save(transaction);
+
+        // adjust limits
+        if (transaction.getResult() == TransactionStatus.ALLOWED) {
+            // dec maxAllowed
+            transactionLimit.setMaxAllowed(updateLimit(transactionLimit.getMaxAllowed(),
+                    transaction.getAmount(), false));
+            if (feedback == TransactionStatus.PROHIBITED) {
+                // dec maxManual
+                transactionLimit.setMaxManual(updateLimit(transactionLimit.getMaxManual(),
+                        transaction.getAmount(), false));
+            }
+        } else if (transaction.getResult() == TransactionStatus.MANUAL_PROCESSING) {
+            if (feedback == TransactionStatus.ALLOWED) {
+                // inc maxAllowed
+                transactionLimit.setMaxAllowed(updateLimit(transactionLimit.getMaxAllowed(),
+                        transaction.getAmount(), true));
+            } else {
+                // dec maxManual
+                transactionLimit.setMaxManual(updateLimit(transactionLimit.getMaxManual(),
+                        transaction.getAmount(), false));
+            }
+        } else {
+            // inc Manual
+            transactionLimit.setMaxManual(updateLimit(transactionLimit.getMaxManual(),
+                    transaction.getAmount(), true));
+            if (feedback == TransactionStatus.ALLOWED) {
+                // inc maxAllowed
+                transactionLimit.setMaxAllowed(updateLimit(transactionLimit.getMaxAllowed(),
+                        transaction.getAmount(), true));
+            }
+        }
+
+        // save new limit
+        transactionLimit = transactionLimitRepository.save(transactionLimit);
 //        return mapper.toDto(transaction);
-//    }
-//
-//    private Long updateLimit(Long currentLimit, Long transactionValue, Boolean increase) {
-//        return (long) Math.ceil((0.8 * currentLimit +
-//                (increase ? 0.2 * transactionValue : -0.2 * transactionValue)));
-//    }
+    }
+
+    private Long updateLimit(Long currentLimit, Long transactionValue, Boolean increase) {
+        return (long) Math.ceil((0.8 * currentLimit +
+                (increase ? 0.2 * transactionValue : -0.2 * transactionValue)));
+    }
 
    public Page<Transaction> list(Pageable pageable, Specification<Transaction> filter) {
         return transactionRepository.findAll(filter, pageable);
     }
-
-//    public TransactionOutDto[] getTransactionHistory() {
-//        List<Transaction> transactions = transactionRepository.findAllByOrderByIdAsc();
-//        return transactions.stream()
-//                .map(mapper::toDto)
-//                .toArray(TransactionOutDto[]::new);
-//    }
-//
-//    public TransactionOutDto[] getTransactionHistoryByNumber(String number) {
-//        List<Transaction> transactions = transactionRepository.findAllByNumberOrderByIdAsc(number);
-//        if (transactions.isEmpty()) {
-//            throw new TransactionNotFoundException();
-//        }
-//        return transactions.stream()
-//                .map(mapper::toDto)
-//                .toArray(TransactionOutDto[]::new);
-//    }
-//
-//    public SuspiciousIpOutDto postSuspiciousIp(SuspiciousIpInDto suspiciousIpInDto) {
-//        if (suspiciousIPRepository.existsByIp(suspiciousIpInDto.ip())) {
-//            throw new SuspiciousIpExistsException();
-//        }
-//        return mapper.toDto(suspiciousIPRepository.save(mapper.toSuspisiousIp(suspiciousIpInDto)));
-//    }
-//
-//    public void deleteSuspiciousIp(String ip) {
-//        SuspiciousIp suspiciousIp = suspiciousIPRepository.findByIp(ip)
-//                .orElseThrow(SuspiciousIpNotFoundException::new);
-//        suspiciousIPRepository.delete(suspiciousIp);
-//    }
-//
-//    public SuspiciousIpOutDto[] getSuspiciousIps() {
-//        List<SuspiciousIp> suspiciousIps = suspiciousIPRepository.findAllByOrderByIdAsc();
-//        return suspiciousIps.stream()
-//                .map(mapper::toDto)
-//                .toArray(SuspiciousIpOutDto[]::new);
-//    }
-//
-//    public StolenCardOutDto postStolenCard(StolenCardInDto stolenCardInDto) {
-//        if (stolenCardRepository.existsByNumber(stolenCardInDto.number())) {
-//            throw new StolenCardExistsException();
-//        }
-//        return mapper.toDto(stolenCardRepository.save(mapper.toStolenCard(stolenCardInDto)));
-//    }
-//
-//    public void deleteStolenCard(String number) {
-//        StolenCard stolenCard = stolenCardRepository.findByNumber(number)
-//                .orElseThrow(StolenCardNotFoundException::new);
-//        stolenCardRepository.delete(stolenCard);
-//    }
-//
-//    public StolenCardOutDto[] getStolenCards() {
-//        List<StolenCard> stolenCards = stolenCardRepository.findAllByOrderByIdAsc();
-//        return stolenCards.stream()
-//                .map(mapper::toDto)
-//                .toArray(StolenCardOutDto[]::new);
-//    }
 
 }

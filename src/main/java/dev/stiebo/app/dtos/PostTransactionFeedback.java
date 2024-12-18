@@ -1,7 +1,9 @@
 package dev.stiebo.app.dtos;
 
+import dev.stiebo.app.configuration.TransactionStatus;
+
 public record PostTransactionFeedback(
-        String result,
+        TransactionStatus result,
         String info
 ) {
 }

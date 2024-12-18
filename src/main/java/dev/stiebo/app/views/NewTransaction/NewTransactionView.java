@@ -17,6 +17,7 @@ import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import dev.stiebo.app.configuration.Region;
+import dev.stiebo.app.configuration.TransactionStatus;
 import dev.stiebo.app.data.StolenCard;
 import dev.stiebo.app.data.Transaction;
 import dev.stiebo.app.dtos.PostTransactionFeedback;
@@ -121,11 +122,11 @@ public class NewTransactionView extends Composite<VerticalLayout> {
             binder.writeBean(transaction);
             PostTransactionFeedback response = transactionService.postTransaction(transaction);
             String responseText = "Transaction saved successfully! (Response: %s.".formatted(response.result()) +
-                    (response.result().equals("ALLOWED") ? ")" : " Reason: %s)".formatted(response.info()));
-            Notification.show(responseText, 5000, Notification.Position.MIDDLE);
+                    (response.result() == TransactionStatus.ALLOWED ? ")" : " Reason: %s)".formatted(response.info()));
+            Notification.show(responseText, 3000, Notification.Position.MIDDLE);
             clearForm();
         } catch (ValidationException e) {
-            Notification.show("Please fix the errors and try again.", 3000, Notification.Position.TOP_CENTER);
+            Notification.show("Please fix the errors and try again.", 3000, Notification.Position.MIDDLE);
         }
     }
 

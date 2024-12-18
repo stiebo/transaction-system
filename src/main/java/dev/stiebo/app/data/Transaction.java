@@ -1,6 +1,7 @@
 package dev.stiebo.app.data;
 
 import dev.stiebo.app.configuration.Region;
+import dev.stiebo.app.configuration.TransactionStatus;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -17,8 +18,8 @@ public class Transaction extends AbstractEntity {
     @Enumerated(EnumType.STRING)
     private Region region;
     private LocalDateTime date;
-    private String result;
-    private String feedback;
+    private TransactionStatus result;
+    private TransactionStatus feedback;
 
     public Transaction() {
     }
@@ -68,20 +69,20 @@ public class Transaction extends AbstractEntity {
         return this;
     }
 
-    public String getResult() {
+    public TransactionStatus getResult() {
         return result;
     }
 
-    public Transaction setResult(String result) {
+    public Transaction setResult(TransactionStatus result) {
         this.result = result;
         return this;
     }
 
-    public String getFeedback() {
+    public TransactionStatus getFeedback() {
         return feedback;
     }
 
-    public Transaction setFeedback(String feedback) {
+    public Transaction setFeedback(TransactionStatus feedback) {
         this.feedback = feedback;
         return this;
     }
