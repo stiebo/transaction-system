@@ -1,14 +1,11 @@
 package dev.stiebo.app.mappers;
 
-import dev.stiebo.app.data.Role;
 import dev.stiebo.app.data.RoleRepository;
 import dev.stiebo.app.data.User;
 import dev.stiebo.app.dtos.UserDto;
-import org.springframework.security.core.parameters.P;
+import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-import java.util.Set;
-
+@Service
 public class UserMapper {
     private final RoleRepository roleRepository;
 
