@@ -120,7 +120,6 @@ public class NewTransactionView extends Composite<VerticalLayout> {
         try {
             binder.writeBean(transaction);
             PostTransactionFeedback response = transactionService.postTransaction(transaction);
-            Notification notification = new Notification();
             String responseText = "Transaction saved successfully! (Response: %s.".formatted(response.result()) +
                     (response.result().equals("ALLOWED") ? ")" : " Reason: %s)".formatted(response.info()));
             Notification.show(responseText, 5000, Notification.Position.MIDDLE);

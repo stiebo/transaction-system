@@ -2,7 +2,6 @@ package dev.stiebo.app.services;
 
 import dev.stiebo.app.data.SuspiciousIp;
 import dev.stiebo.app.data.SuspiciousIpRepository;
-import dev.stiebo.app.data.Transaction;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;

@@ -11,8 +11,4 @@ import java.util.Optional;
 public interface StolenCardRepository extends JpaRepository<StolenCard, Long>,
         JpaSpecificationExecutor<StolenCard> {
     Boolean existsByNumber(String number);
-
-    Optional<StolenCard> findByNumber(String number);
-
-    List<StolenCard> findAllByOrderByIdAsc();
 }

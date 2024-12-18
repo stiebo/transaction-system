@@ -11,8 +11,4 @@ import java.util.Optional;
 public interface SuspiciousIpRepository extends JpaRepository<SuspiciousIp, Long>,
         JpaSpecificationExecutor<SuspiciousIp> {
     Boolean existsByIp(String ip);
-
-    Optional<SuspiciousIp> findByIp(String ip);
-
-    List<SuspiciousIp> findAllByOrderByIdAsc();
 }
