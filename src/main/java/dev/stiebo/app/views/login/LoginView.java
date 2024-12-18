@@ -1,5 +1,6 @@
 package dev.stiebo.app.views.login;
 
+import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.login.LoginI18n;
 import com.vaadin.flow.component.login.LoginOverlay;
 import com.vaadin.flow.router.BeforeEnterEvent;
@@ -9,6 +10,7 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.internal.RouteUtil;
 import com.vaadin.flow.server.VaadinService;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
+import com.vaadin.flow.theme.lumo.LumoUtility;
 import dev.stiebo.app.security.AuthenticatedUser;
 
 @AnonymousAllowed
@@ -22,13 +24,11 @@ public class LoginView extends LoginOverlay implements BeforeEnterObserver {
         this.authenticatedUser = authenticatedUser;
         setAction(RouteUtil.getRoutePath(VaadinService.getCurrent().getContext(), getClass()));
 
-        LoginI18n i18n = LoginI18n.createDefault();
-        i18n.setHeader(new LoginI18n.Header());
-        i18n.getHeader().setTitle("MyEmptyStarter");
-        i18n.getHeader().setDescription("Login using user/user or admin/admin");
-        i18n.setAdditionalInformation(null);
-        setI18n(i18n);
-
+        setTitle("Transaction System");
+        setDescription("Financial transactions with fraud-protection (demo)");
+        Paragraph text = new Paragraph("Default login: merchant/merchant, support/support or admin/admin");
+        text.addClassName(LumoUtility.TextAlignment.CENTER);
+        getFooter().add(text);
         setForgotPasswordButtonVisible(false);
         setOpened(true);
     }
