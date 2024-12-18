@@ -10,9 +10,7 @@ import java.util.List;
 import dev.stiebo.app.dtos.UserDto;
 import dev.stiebo.app.mappers.UserMapper;
 import jakarta.transaction.Transactional;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 

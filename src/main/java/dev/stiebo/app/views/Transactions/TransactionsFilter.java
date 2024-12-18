@@ -45,7 +45,6 @@ public class TransactionsFilter extends HorizontalLayout implements Specificatio
         maxAmount.addValueChangeListener(e -> onSearch.run());
         textSearch.addValueChangeListener(e -> onSearch.run()); // Triggers search on value change
 
-        // Add the fields to the layout
         add(startDate, endDate, minAmount, maxAmount, textSearch, resetBtn);
     }
 
@@ -62,7 +61,6 @@ public class TransactionsFilter extends HorizontalLayout implements Specificatio
     public Predicate toPredicate(Root<Transaction> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
         List<Predicate> predicates = new ArrayList<>();
 
-        // Filter by date range
         if (startDate.getValue() != null) {
             predicates.add(cb.greaterThanOrEqualTo(
                     root.get("date"), startDate.getValue().atStartOfDay()));
@@ -72,7 +70,6 @@ public class TransactionsFilter extends HorizontalLayout implements Specificatio
                     root.get("date"), endDate.getValue().atTime(LocalTime.MAX)));
         }
 
-        // Filter by amount range
         if (!minAmount.isEmpty()) {
             try {
                 long min = Long.parseLong(minAmount.getValue());
@@ -88,7 +85,6 @@ public class TransactionsFilter extends HorizontalLayout implements Specificatio
             }
         }
 
-        // Filter by region and number (combined field)
         if (!textSearch.isEmpty()) {
             String value = textSearch.getValue().toLowerCase();
             Predicate numberPredicate = cb.like(cb.lower(root.get("number")), "%" + value + "%");
