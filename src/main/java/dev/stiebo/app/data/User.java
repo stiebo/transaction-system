@@ -23,10 +23,6 @@ public class User extends AbstractEntity implements UserDetails {
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
 
-    @Lob
-    @Column(length = 1000000)
-    private byte[] profilePicture;
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("ROLE_" + role.getName()));
@@ -70,12 +66,4 @@ public class User extends AbstractEntity implements UserDetails {
         return this;
     }
 
-    public byte[] getProfilePicture() {
-        return profilePicture;
-    }
-
-    public User setProfilePicture(byte[] profilePicture) {
-        this.profilePicture = profilePicture;
-        return this;
-    }
 }
