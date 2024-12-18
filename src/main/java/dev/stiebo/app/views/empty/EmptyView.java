@@ -13,7 +13,7 @@ import jakarta.annotation.security.RolesAllowed;
 import org.vaadin.lineawesome.LineAwesomeIconUrl;
 
 @PageTitle("Empty")
-@Route("")
+@Route("empty")
 @Menu(order = 0, icon = LineAwesomeIconUrl.FILE)
 @AnonymousAllowed
 public class EmptyView extends Composite<VerticalLayout> {
