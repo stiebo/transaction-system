@@ -2,6 +2,7 @@ package dev.stiebo.app.views.NewTransaction;
 
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datetimepicker.DateTimePicker;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.H1;
@@ -15,6 +16,7 @@ import com.vaadin.flow.data.validator.RegexpValidator;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import dev.stiebo.app.configuration.Region;
 import dev.stiebo.app.data.Transaction;
 import dev.stiebo.app.dtos.PostTransactionFeedback;
 import dev.stiebo.app.services.TransactionService;
@@ -38,7 +40,8 @@ public class NewTransactionView extends Composite<VerticalLayout> {
     private final TextField amountField = new TextField("Amount");
     private final TextField ipField = new TextField("IP Address");
     private final TextField numberField = new TextField("Number");
-    private final TextField regionField = new TextField("Region");
+//    private final TextField regionField = new TextField("Region");
+    private final ComboBox<Region> regionField = new ComboBox<>("Region");
     private final DateTimePicker dateField = new DateTimePicker("Transaction Date");
 
     private final Button saveButton = new Button("Save");
@@ -63,6 +66,7 @@ public class NewTransactionView extends Composite<VerticalLayout> {
         numberField.setPlaceholder("Enter number");
         numberField.setPattern("\\d*");
         regionField.setPlaceholder("Enter region");
+        regionField.setItems(Region.values());
         dateField.setDatePlaceholder("Select date");
         dateField.setTimePlaceholder("Select time");
     }
@@ -117,7 +121,7 @@ public class NewTransactionView extends Composite<VerticalLayout> {
             Notification notification = new Notification();
             String responseText = "Transaction saved successfully! (Response: %s.".formatted(response.result()) +
                     (response.result().equals("ALLOWED") ? ")" : " Reason: %s)".formatted(response.info()));
-            Notification.show(responseText, 5000, Notification.Position.TOP_CENTER);
+            Notification.show(responseText, 5000, Notification.Position.MIDDLE);
             clearForm();
         } catch (ValidationException e) {
             Notification.show("Please fix the errors and try again.", 3000, Notification.Position.TOP_CENTER);
@@ -140,7 +144,7 @@ public class NewTransactionView extends Composite<VerticalLayout> {
         String number = generateRandomCardNumber();
         numberField.setValue(number);
 
-        String region = "EAP";
+        Region region = Region.values()[random.nextInt(Region.values().length)];
         regionField.setValue(region);
 
         LocalDateTime date = generateRandomDate();

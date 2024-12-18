@@ -1,6 +1,9 @@
 package dev.stiebo.app.data;
 
+import dev.stiebo.app.configuration.Region;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
 
 import java.time.LocalDateTime;
@@ -11,7 +14,8 @@ public class Transaction extends AbstractEntity {
     private Long amount;
     private String ip;
     private String number;
-    private String region;
+    @Enumerated(EnumType.STRING)
+    private Region region;
     private LocalDateTime date;
     private String result;
     private String feedback;
@@ -46,11 +50,11 @@ public class Transaction extends AbstractEntity {
         return this;
     }
 
-    public String getRegion() {
+    public Region getRegion() {
         return region;
     }
 
-    public Transaction setRegion(String region) {
+    public Transaction setRegion(Region region) {
         this.region = region;
         return this;
     }
