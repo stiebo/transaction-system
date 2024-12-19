@@ -6,6 +6,7 @@ import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
@@ -14,6 +15,7 @@ import org.vaadin.lineawesome.LineAwesomeIconUrl;
 
 @PageTitle("Welcome to Anti-Fraud System")
 @Route("")
+@Menu(order = 0, icon = LineAwesomeIconUrl.FILE)
 @AnonymousAllowed
 public class MainView extends Composite<VerticalLayout> {
 
@@ -40,7 +42,7 @@ public class MainView extends Composite<VerticalLayout> {
 
         Button getStartedButton = new Button("Get Started"); // , new Icon(VaadinIcon.ARROW_FORWARD));
         getStartedButton.addClickListener(event ->
-                getUI().ifPresent(ui -> ui.navigate("empty"))
+                getUI().ifPresent(ui -> ui.navigate("login"))
         );
 
         layout.add(title, subTitle, introText, featureCards, getStartedButton);
