@@ -10,18 +10,14 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.flow.theme.lumo.LumoUtility;
-import dev.stiebo.app.configuration.TransactionStatus;
 import dev.stiebo.app.data.TransactionLimit;
 import dev.stiebo.app.dtos.DailyTransactionSummary;
 import dev.stiebo.app.dtos.TransactionsByRegion;
 import dev.stiebo.app.services.DashboardService;
-import dev.stiebo.app.views.MainLayout;
 import jakarta.annotation.security.PermitAll;
 import org.vaadin.lineawesome.LineAwesomeIconUrl;
 
-import java.time.Instant;
 import java.time.ZoneId;
 import java.util.List;
 
