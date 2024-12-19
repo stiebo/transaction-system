@@ -34,7 +34,7 @@ import static dev.stiebo.app.data.StolenCard.luhnCheck;
 
 @PageTitle("New transaction")
 @Route("newtransaction")
-@Menu(order = 3, icon = LineAwesomeIconUrl.COMMENTS_DOLLAR_SOLID)
+@Menu(order = 2, icon = LineAwesomeIconUrl.MONEY_BILL_ALT)
 @RolesAllowed("MERCHANT")
 public class NewTransactionView extends Composite<VerticalLayout> {
     private final TransactionService transactionService;

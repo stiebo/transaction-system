@@ -19,7 +19,7 @@ import org.vaadin.lineawesome.LineAwesomeIconUrl;
 
 @PageTitle("Suspicious IPs")
 @Route("suspiciousips")
-@Menu(order = 2, icon = LineAwesomeIconUrl.COMMENTS_DOLLAR_SOLID)
+@Menu(order = 4, icon = LineAwesomeIconUrl.NETWORK_WIRED_SOLID)
 @RolesAllowed("SUPPORT")
 public class SuspiciousIpsView extends Composite<VerticalLayout> {
 

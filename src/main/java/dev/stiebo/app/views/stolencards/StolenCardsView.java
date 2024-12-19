@@ -19,7 +19,7 @@ import org.vaadin.lineawesome.LineAwesomeIconUrl;
 
 @PageTitle("Stolen cards")
 @Route("stolencards")
-@Menu(order = 3, icon = LineAwesomeIconUrl.COMMENTS_DOLLAR_SOLID)
+@Menu(order = 3, icon = LineAwesomeIconUrl.CC_VISA)
 @RolesAllowed("SUPPORT")
 public class StolenCardsView extends Composite<VerticalLayout> {
 

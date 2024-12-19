@@ -37,7 +37,7 @@ import java.util.Arrays;
 
 @PageTitle("Users")
 @Route("users")
-@Menu(order = 1, icon = LineAwesomeIconUrl.USERS_SOLID)
+@Menu(order = 2, icon = LineAwesomeIconUrl.USERS_SOLID)
 @RolesAllowed("ADMIN")
 public class UsersView extends Composite<VerticalLayout> {
 
