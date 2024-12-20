@@ -16,10 +16,12 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.provider.CallbackDataProvider;
 import com.vaadin.flow.data.provider.ConfigurableFilterDataProvider;
 import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
+import com.vaadin.flow.data.validator.BeanValidator;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
@@ -65,9 +67,9 @@ public class UsersView extends Composite<VerticalLayout> {
         topRow.add(searchField, addUserBtn);
 
         grid = new Grid<>();
-        grid.addColumn(UserDto::name).setHeader("Name");
-        grid.addColumn(UserDto::username).setHeader("Username");
-        grid.addColumn(UserDto::roleName).setHeader("Role");
+        grid.addColumn(UserDto::getName).setHeader("Name");
+        grid.addColumn(UserDto::getUsername).setHeader("Username");
+        grid.addColumn(UserDto::getRoleName).setHeader("Role");
         grid.addColumn(
                 new ComponentRenderer<>(Button::new, (button, userDto) -> {
                     button.addThemeVariants(ButtonVariant.LUMO_ICON,
@@ -107,7 +109,7 @@ public class UsersView extends Composite<VerticalLayout> {
 
     private void deleteUser(UserDto userDto) {
         if (authenticatedUser.get().isPresent() &&
-                authenticatedUser.get().get().getUsername().equals(userDto.username())) {
+                authenticatedUser.get().get().getUsername().equals(userDto.getUsername())) {
             Notification.show("Own user cannot be deleted.", 3000, Notification.Position.TOP_CENTER);
             return;
         }
@@ -116,43 +118,50 @@ public class UsersView extends Composite<VerticalLayout> {
     }
 
     private void openAddUserDialog() {
+        Binder<UserDto> binder = new Binder<>();
+
         Dialog dialog = new Dialog();
         dialog.setHeaderTitle("Add New User");
 
         TextField nameField = new TextField("Name");
         nameField.setRequired(true);
+        binder.forField(nameField)
+                .asRequired()
+                .bind(UserDto::getName, UserDto::setName);
 
         TextField usernameField = new TextField("Username");
         usernameField.setRequired(true);
+        binder.forField(usernameField)
+                .asRequired()
+                .bind(UserDto::getUsername, UserDto::setUsername);
 
         PasswordField passwordField = new PasswordField("Password");
         passwordField.setRequired(true);
+        binder.forField(passwordField)
+                .asRequired()
+                .bind(UserDto::getPassword, UserDto::setPassword);
 
-        ComboBox<String> roleComboBox = new ComboBox<>("Role");
-        roleComboBox.setItems(Arrays.stream(RoleName.values()).map(Enum::name).toList());
+        ComboBox<RoleName> roleComboBox = new ComboBox<>("Role");
+        roleComboBox.setItems(RoleName.values());
         roleComboBox.setRequired(true);
+        binder.forField(roleComboBox)
+                .asRequired()
+                .bind(UserDto::getRoleName, UserDto::setRoleName);
 
         FormLayout dialogLayout = new FormLayout(nameField, usernameField, passwordField, roleComboBox);
 
         Button saveButton = new Button("Save", event -> {
-            String name = nameField.getValue();
-            String username = usernameField.getValue();
-            String password = passwordField.getValue();
-            String role = roleComboBox.getValue();
-
-            if (name.isEmpty() || username.isEmpty() || password.isEmpty() || role == null) {
-                Notification.show("Please fill out all required fields.", 3000, Notification.Position.MIDDLE);
-                return;
-            }
+            UserDto userDto = new UserDto();
 
             try {
-                userService.createUser(name, username, password, role);
+                binder.writeBean(userDto);
+                userService.createUser(userDto);
                 Notification.show("User created successfully!", 3000, Notification.Position.TOP_CENTER);
+                refreshGrid();
+                dialog.close();
             } catch (Exception e) {
                 Notification.show("Error: " + e.getMessage(), 3000, Notification.Position.TOP_CENTER);
             }
-            refreshGrid();
-            dialog.close();
         });
 
         Button cancelButton = new Button("Cancel", event -> dialog.close());

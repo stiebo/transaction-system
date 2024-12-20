@@ -30,21 +30,21 @@ public class UserService {
     }
 
     @Transactional
-    public void createUser (String name, String username, String password, String roleName) throws RuntimeException {
-        if (userRepository.existsByUsernameIgnoreCase(username)) {
+    public void createUser (UserDto userDto) throws RuntimeException {
+        if (userRepository.existsByUsernameIgnoreCase(userDto.getUsername())) {
             throw new RuntimeException("Username already exists");
         }
         User newUser = new User()
-                .setName(name)
-                .setUsername(username)
-                .setPassword(encoder.encode(password))
-                .setRole(roleRepository.findByName(RoleName.valueOf(roleName)));
+                .setName(userDto.getName())
+                .setUsername(userDto.getUsername())
+                .setPassword(encoder.encode(userDto.getPassword()))
+                .setRole(roleRepository.findByName(userDto.getRoleName()));
         userRepository.save(newUser);
     }
 
     @Transactional
     public void deleteUser (UserDto userDto) {
-        userRepository.delete(userRepository.findByUsername(userDto.username())
+        userRepository.delete(userRepository.findByUsername(userDto.getUsername())
                 .orElseThrow(() -> new RuntimeException("Username not found")));
     }
 

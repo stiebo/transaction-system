@@ -15,10 +15,10 @@ public class UserMapper {
 
     public User toUser(UserDto dto) {
         return new User()
-                .setName(dto.name())
-                .setUsername(dto.username())
-                .setPassword(dto.password())
-                .setRole(roleRepository.findByName(dto.roleName()));
+                .setName(dto.getName())
+                .setUsername(dto.getUsername())
+                .setPassword(dto.getPassword())
+                .setRole(roleRepository.findByName(dto.getRoleName()));
     }
 
     public UserDto toDto(User user) {
