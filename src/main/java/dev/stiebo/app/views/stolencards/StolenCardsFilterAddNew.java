@@ -9,6 +9,7 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
+import com.vaadin.flow.data.validator.BeanValidator;
 import dev.stiebo.app.data.StolenCard;
 import dev.stiebo.app.services.StolenCardService;
 import jakarta.persistence.criteria.CriteriaBuilder;
@@ -50,7 +51,7 @@ public class StolenCardsFilterAddNew extends HorizontalLayout implements Specifi
         binder.forField(stolenCardField)
                 .asRequired("Card number required")
                 .withValidator(value -> value.matches("\\d+"), "Number must be numeric")
-                .withValidator(StolenCard::luhnCheck, "The number is not a valid credit card number.")
+                .withValidator(new BeanValidator(StolenCard.class, "number"))
                 .bind(StolenCard::getNumber, StolenCard::setNumber);
 
         Button saveButton = new Button("Save", event -> {
@@ -59,11 +60,11 @@ public class StolenCardsFilterAddNew extends HorizontalLayout implements Specifi
                 binder.writeBean(stolenCard);
                 service.create(stolenCard);
                 Notification.show("Entry created successfully!", 3000, Notification.Position.TOP_CENTER);
+                onUpdate.run();
+                dialog.close();
             } catch (Exception e) {
                 Notification.show("Error: " + e.getMessage(), 3000, Notification.Position.TOP_CENTER);
             }
-            onUpdate.run();
-            dialog.close();
         });
         saveButton.addClickShortcut(Key.ENTER);
 

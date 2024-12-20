@@ -6,6 +6,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
+import org.hibernate.validator.constraints.LuhnCheck;
 
 import java.time.LocalDateTime;
 
@@ -14,6 +15,7 @@ import java.time.LocalDateTime;
 public class Transaction extends AbstractEntity {
     private Long amount;
     private String ip;
+    @LuhnCheck(message = "Not a valid credit card number")
     private String number;
     @Enumerated(EnumType.STRING)
     private Region region;
