@@ -1,4 +1,4 @@
-package dev.stiebo.app.views.empty;
+package dev.stiebo.app.views.dashboard;
 
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.charts.Chart;
