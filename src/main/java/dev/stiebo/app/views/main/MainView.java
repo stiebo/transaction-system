@@ -13,7 +13,7 @@ import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 import org.vaadin.lineawesome.LineAwesomeIconUrl;
 
-@PageTitle("Welcome to Anti-Fraud System")
+@PageTitle("Home")
 @Route("")
 @Menu(order = 0, icon = LineAwesomeIconUrl.FILE)
 @AnonymousAllowed
