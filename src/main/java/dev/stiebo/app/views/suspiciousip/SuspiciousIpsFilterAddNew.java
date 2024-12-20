@@ -59,11 +59,11 @@ public class SuspiciousIpsFilterAddNew extends HorizontalLayout implements Speci
                 binder.writeBean(suspiciousIp);
                 service.create(suspiciousIp);
                 Notification.show("Entry created successfully!", 3000, Notification.Position.TOP_CENTER);
+                onUpdate.run();
+                dialog.close();
             } catch (Exception e) {
                 Notification.show("Error: " + e.getMessage(), 3000, Notification.Position.TOP_CENTER);
             }
-            onUpdate.run();
-            dialog.close();
         });
         saveButton.addClickShortcut(Key.ENTER);
 
