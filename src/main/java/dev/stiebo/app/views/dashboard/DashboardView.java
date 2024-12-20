@@ -48,6 +48,7 @@ public class DashboardView extends Composite<VerticalLayout> {
         HorizontalLayout chartsLayout = new HorizontalLayout(createTransactionTrendsChart(), createRegionDistributionChart());
 //        HorizontalLayout timelineLayout = new HorizontalLayout(createDailyTransactionSummaryChart());
         chartsLayout.setWidthFull();
+        chartsLayout.getStyle().set("flex-wrap", "wrap");
         chartsLayout.addClassNames(LumoUtility.Gap.MEDIUM, LumoUtility.AlignItems.START);
         layout.add(chartsLayout);
 
@@ -56,7 +57,8 @@ public class DashboardView extends Composite<VerticalLayout> {
     private HorizontalLayout createKeyMetrics() {
         HorizontalLayout layout = new HorizontalLayout();
         layout.setWidthFull();
-        layout.addClassNames(LumoUtility.Gap.LARGE, LumoUtility.JustifyContent.CENTER);
+        layout.getStyle().set("flex-wrap", "wrap");
+        layout.addClassNames(LumoUtility.Gap.LARGE, LumoUtility.JustifyContent.CENTER, LumoUtility.AlignItems.CENTER);
 
         TransactionLimit limit = service.getLimit();
         Div allowedLimit = createMetricCard("Allowed Limit", limit.getMaxAllowed().toString());
