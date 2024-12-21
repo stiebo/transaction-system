@@ -11,6 +11,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -21,7 +22,6 @@ import com.vaadin.flow.data.provider.CallbackDataProvider;
 import com.vaadin.flow.data.provider.ConfigurableFilterDataProvider;
 import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
-import com.vaadin.flow.data.validator.BeanValidator;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
@@ -34,8 +34,6 @@ import dev.stiebo.app.services.UserService;
 import jakarta.annotation.security.RolesAllowed;
 import org.springframework.data.domain.PageRequest;
 import org.vaadin.lineawesome.LineAwesomeIconUrl;
-
-import java.util.Arrays;
 
 @PageTitle("Users")
 @Route("users")
@@ -110,7 +108,10 @@ public class UsersView extends Composite<VerticalLayout> {
     private void deleteUser(UserDto userDto) {
         if (authenticatedUser.get().isPresent() &&
                 authenticatedUser.get().get().getUsername().equals(userDto.getUsername())) {
-            Notification.show("Own user cannot be deleted.", 3000, Notification.Position.TOP_CENTER);
+            Notification notification = new Notification("Own user cannot be deleted.",
+                    5000, Notification.Position.TOP_CENTER);
+            notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+            notification.open();
             return;
         }
         userService.deleteUser(userDto);
@@ -156,11 +157,17 @@ public class UsersView extends Composite<VerticalLayout> {
             try {
                 binder.writeBean(userDto);
                 userService.createUser(userDto);
-                Notification.show("User created successfully!", 3000, Notification.Position.TOP_CENTER);
+                Notification notification = new Notification("User created successfully!",
+                        5000, Notification.Position.TOP_CENTER);
+                notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+                notification.open();
                 refreshGrid();
                 dialog.close();
             } catch (Exception e) {
-                Notification.show("Error: " + e.getMessage(), 3000, Notification.Position.TOP_CENTER);
+                Notification notification = new Notification("Error: " + e.getMessage(),
+                        5000, Notification.Position.TOP_CENTER);
+                notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+                notification.open();
             }
         });
 

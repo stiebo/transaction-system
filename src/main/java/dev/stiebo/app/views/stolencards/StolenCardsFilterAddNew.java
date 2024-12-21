@@ -5,6 +5,7 @@ import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -59,11 +60,17 @@ public class StolenCardsFilterAddNew extends HorizontalLayout implements Specifi
             try {
                 binder.writeBean(stolenCard);
                 service.create(stolenCard);
-                Notification.show("Entry created successfully!", 3000, Notification.Position.TOP_CENTER);
+                Notification notification = new Notification("Entry created successfully!",
+                        5000, Notification.Position.TOP_CENTER);
+                notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+                notification.open();
                 onUpdate.run();
                 dialog.close();
             } catch (Exception e) {
-                Notification.show("Error: " + e.getMessage(), 3000, Notification.Position.TOP_CENTER);
+                Notification notification = new Notification("Error: " + e.getMessage(),
+                        5000, Notification.Position.TOP_CENTER);
+                notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+                notification.open();
             }
         });
         saveButton.addClickShortcut(Key.ENTER);

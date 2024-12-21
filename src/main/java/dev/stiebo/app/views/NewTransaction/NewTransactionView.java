@@ -7,6 +7,7 @@ import com.vaadin.flow.component.datetimepicker.DateTimePicker;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -23,6 +24,7 @@ import dev.stiebo.app.data.Transaction;
 import dev.stiebo.app.dtos.PostTransactionFeedback;
 import dev.stiebo.app.services.TransactionService;
 import jakarta.annotation.security.RolesAllowed;
+import org.aspectj.weaver.ast.Not;
 import org.vaadin.lineawesome.LineAwesomeIconUrl;
 
 import java.time.Instant;
@@ -121,10 +123,15 @@ public class NewTransactionView extends Composite<VerticalLayout> {
             PostTransactionFeedback response = transactionService.postTransaction(transaction);
             String responseText = "Transaction saved successfully! (Response: %s.".formatted(response.result()) +
                     (response.result() == TransactionStatus.ALLOWED ? ")" : " Reason: %s)".formatted(response.info()));
-            Notification.show(responseText, 3000, Notification.Position.MIDDLE);
+            Notification notification = new Notification(responseText, 5000, Notification.Position.MIDDLE);
+            notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+            notification.open();
             clearForm();
         } catch (ValidationException e) {
-            Notification.show("Please fix the errors and try again.", 3000, Notification.Position.MIDDLE);
+            Notification notification = new Notification("Error: " + e.getMessage(),
+                    5000, Notification.Position.MIDDLE);
+            notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+            notification.open();
         }
     }
 

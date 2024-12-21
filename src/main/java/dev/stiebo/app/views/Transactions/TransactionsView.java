@@ -5,13 +5,13 @@ import com.vaadin.flow.component.gridpro.GridPro;
 import com.vaadin.flow.component.gridpro.GridProVariant;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.renderer.LocalDateTimeRenderer;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.theme.lumo.LumoUtility;
 import dev.stiebo.app.configuration.TransactionStatus;
 import dev.stiebo.app.data.Transaction;
 import dev.stiebo.app.services.TransactionService;
@@ -62,12 +62,18 @@ public class TransactionsView extends Composite<VerticalLayout> {
                 .select((transaction, newFeedback) -> {
                     try {
                         transactionService.updateTransactionFeedback(transaction.getId(), newFeedback);
-                        Notification.show("Feedback updated", 2000, Notification.Position.MIDDLE);
+                        Notification notification = new Notification("Feedback updated",
+                                5000, Notification.Position.MIDDLE);
+                        notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+                        notification.open();
                         // need to also update "in-memory"-Transaction with new Feedback to show on screen
                         transaction.setFeedback(newFeedback);
                     }
                     catch (Exception e) {
-                        Notification.show("Error: " + e.getMessage(), 3000, Notification.Position.MIDDLE);
+                        Notification notification = new Notification("Error: " + e.getMessage(),
+                                5000, Notification.Position.MIDDLE);
+                        notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+                        notification.open();
                     }
                 }, TransactionStatus.class)
                 .setHeader("Feedback");
