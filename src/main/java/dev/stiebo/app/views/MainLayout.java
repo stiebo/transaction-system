@@ -17,7 +17,6 @@ import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.sidenav.SideNav;
 import com.vaadin.flow.component.sidenav.SideNavItem;
 import com.vaadin.flow.router.Layout;
-import com.vaadin.flow.server.StreamResource;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.flow.server.menu.MenuConfiguration;
 import com.vaadin.flow.server.menu.MenuEntry;
@@ -25,7 +24,6 @@ import com.vaadin.flow.theme.lumo.LumoUtility;
 import dev.stiebo.app.data.User;
 import dev.stiebo.app.security.AuthenticatedUser;
 
-import java.io.ByteArrayInputStream;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,7 +36,7 @@ public class MainLayout extends AppLayout {
 
     private H1 viewTitle;
 
-    private AuthenticatedUser authenticatedUser;
+    private final AuthenticatedUser authenticatedUser;
 
     public MainLayout(AuthenticatedUser authenticatedUser) {
         this.authenticatedUser = authenticatedUser;
@@ -59,7 +57,7 @@ public class MainLayout extends AppLayout {
     }
 
     private void addDrawerContent() {
-        Span appName = new Span("MyEmptyStarter");
+        Span appName = new Span("Transaction System");
         appName.addClassNames(LumoUtility.FontWeight.SEMIBOLD, LumoUtility.FontSize.LARGE);
         Header header = new Header(appName);
 
@@ -91,12 +89,6 @@ public class MainLayout extends AppLayout {
             User user = maybeUser.get();
 
             Avatar avatar = new Avatar(user.getName());
-            byte[] profilePicture = user.getProfilePicture();
-            if (profilePicture != null) {
-                StreamResource resource = new StreamResource("profile-pic",
-                        () -> new ByteArrayInputStream(profilePicture));
-                avatar.setImageResource(resource);
-            }
             avatar.setThemeName("xsmall");
             avatar.getElement().setAttribute("tabindex", "-1");
 

@@ -7,7 +7,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Table(name = "application_user")
@@ -18,22 +18,13 @@ public class User extends AbstractEntity implements UserDetails {
     private String name;
     @JsonIgnore
     private String password;
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "user_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id")
-    )
-    private Set<Role> roles;
-    @Lob
-    @Column(length = 1000000)
-    private byte[] profilePicture;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "role_id", nullable = false)
+    private Role role;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return roles.stream()
-                .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getName()))
-                .toList();
+        return List.of(new SimpleGrantedAuthority("ROLE_" + role.getName()));
     }
 
     @Override
@@ -65,21 +56,13 @@ public class User extends AbstractEntity implements UserDetails {
         return this;
     }
 
-    public Set<Role> getRoles() {
-        return roles;
+    public Role getRole() {
+        return role;
     }
 
-    public User setRoles(Set<Role> roles) {
-        this.roles = roles;
+    public User setRole(Role role) {
+        this.role = role;
         return this;
     }
 
-    public byte[] getProfilePicture() {
-        return profilePicture;
-    }
-
-    public User setProfilePicture(byte[] profilePicture) {
-        this.profilePicture = profilePicture;
-        return this;
-    }
 }

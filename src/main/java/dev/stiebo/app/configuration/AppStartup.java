@@ -8,9 +8,6 @@ import jakarta.annotation.PostConstruct;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
-import java.util.Set;
-
 @Component
 public class AppStartup {
 
@@ -35,19 +32,28 @@ public class AppStartup {
             }
         }
 
-        // create at least one Admin
+        // create demo users
         if (userRepository.count() == 0) {
             User admin = new User()
                     .setName("Admin")
                     .setUsername("admin")
-                    .setPassword(passwordEncoder.encode("admin")); // Demo only!
-            Optional<Role> adminRoleOpt = roleRepository.findByName(RoleName.ADMIN);
-            if (adminRoleOpt.isPresent()) {
-                admin.setRoles(Set.of(adminRoleOpt.get()));
-            } else {
-                throw new RuntimeException("Role ADMIN not found.");
-            }
+                    .setPassword(passwordEncoder.encode("admin")) // Demo only!
+                    .setRole(roleRepository.findByName(RoleName.ADMIN));
             userRepository.save(admin);
+
+            User support = new User()
+                    .setName("Mr. Support")
+                    .setUsername("support")
+                    .setPassword(passwordEncoder.encode("support"))
+                    .setRole(roleRepository.findByName(RoleName.SUPPORT));
+            userRepository.save(support);
+
+            User merchant = new User()
+                    .setName("Ms. Merchant")
+                    .setUsername("merchant")
+                    .setPassword(passwordEncoder.encode("merchant"))
+                    .setRole(roleRepository.findByName(RoleName.MERCHANT));
+            userRepository.save(merchant);
         }
     }
 }
