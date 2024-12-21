@@ -24,7 +24,6 @@ import dev.stiebo.app.data.Transaction;
 import dev.stiebo.app.dtos.PostTransactionFeedback;
 import dev.stiebo.app.services.TransactionService;
 import jakarta.annotation.security.RolesAllowed;
-import org.aspectj.weaver.ast.Not;
 import org.vaadin.lineawesome.LineAwesomeIconUrl;
 
 import java.time.Instant;
