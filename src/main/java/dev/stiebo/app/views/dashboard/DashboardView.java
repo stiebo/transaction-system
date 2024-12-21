@@ -200,9 +200,6 @@ public class DashboardView extends Composite<VerticalLayout> {
         config.addSeries(manualSeries);
         config.addSeries(prohibitedSeries);
 
-//        chart.setWidthFull();
-//        chart.setHeight("64%");
-        chart.addClassNames("w-full", "h-64");
         return chart;
     }
 
@@ -227,9 +224,6 @@ public class DashboardView extends Composite<VerticalLayout> {
         configuration.setTooltip(tooltip);
         configuration.setSeries(series);
 
-//        chart.setWidthFull();
-//        chart.setHeight("64%");
-        chart.addClassNames("w-full", "h-64");
         return chart;
     }
 
