@@ -1,68 +1,73 @@
-# Custom Vaadin Starter
+# Transaction System
 
-This project can be used as a starting point to create your own Vaadin application with Spring Boot.
-It contains all the necessary configuration and some placeholder files to get you started.
-Additionally, it has Authentication/WebSecurity enabled and creates a demo admin user.
+The Transaction System is a web application built with Vaadin and Spring Boot, designed to manage and process financial
+transactions efficiently.
 
-## Running the application
+## Features
 
-Open the project in an IDE. You can download the [IntelliJ community edition](https://www.jetbrains.com/idea/download) if you do not have a suitable IDE already.
-Once opened in the IDE, locate the `Application` class and run the main method using "Debug".
+- **Vaadin Frontend with Spring Boot Backend**
+- **User Authentication**: Secure login system with role-based access control.
+- **Transaction Management**: Create, view, and manage transactions seamlessly.
+- **Responsive UI**: Intuitive and responsive user interface built with Vaadin.
 
-For more information on installing in various IDEs, see [how to import Vaadin projects to different IDEs](https://vaadin.com/docs/latest/getting-started/import).
+## Background
 
-If you install the Vaadin plugin for IntelliJ, you should instead launch the `Application` class using "Debug using HotswapAgent" to see updates in the Java code immediately reflected in the browser.
+Frauds carry significant financial costs and risks for all stakeholders. So, the presence of an anti-fraud system is a
+necessity for any serious e-commerce platform.
 
-## Deploying to Production
+The Anti-Fraud System project provides a comprehensive framework for detecting and preventing fraudulent financial
+transactions. By integrating role-based access control, RESTful APIs, heuristic validation rules, and adaptive feedback
+mechanisms, the system offers a robust solution for financial institutions to safeguard against fraud. Leveraging Spring
+Boot and its associated technologies, the project demonstrates best practices in building secure, scalable, and
+maintainable applications in the financial sector.
 
-The project is a standard Maven project. To create a production build, call 
+Check out my Github profile: [https://github.com/stiebo](https://github.com/stiebo)
 
-```
-./mvnw clean package -Pproduction
-```
+Link to the learning project: [https://hyperskill.org/projects/232](https://hyperskill.org/projects/232)
 
-If you have Maven globally installed, you can replace `./mvnw` with `mvn`.
+Check out my learning profile: [https://hyperskill.org/profile/500961738](https://hyperskill.org/profile/500961738)
 
-This will build a JAR file with all the dependencies and front-end resources,ready to be run. The file can be found in the `target` folder after the build completes.
-You then launch the application using 
-```
-java -jar target/custom-vaadin-starter-1.0-SNAPSHOT.jar
-```
+## Key Components of the Anti-Fraud System
 
-## Project structure
+1. **Role-Based Access Control**:
 
-- `MainLayout.java` in `src/main/java` contains the navigation setup (i.e., the
-  side/top bar and the main menu). This setup uses
-  [App Layout](https://vaadin.com/docs/components/app-layout).
-- `views` package in `src/main/java` contains the server-side Java views of your application.
-- `views` folder in `src/main/frontend` contains the client-side JavaScript views of your application.
-- `themes` folder in `src/main/frontend` contains the custom CSS styles.
+- **User Roles**: The system defines specific roles, including **Administrator**, **Merchant**, and **Support**.
 
-## Useful links
+- **Permissions**:
 
-- Read the documentation at [vaadin.com/docs](https://vaadin.com/docs).
-- Follow the tutorial at [vaadin.com/docs/latest/tutorial/overview](https://vaadin.com/docs/latest/tutorial/overview).
-- Create new projects at [start.vaadin.com](https://start.vaadin.com/).
-- Search UI components and their usage examples at [vaadin.com/docs/latest/components](https://vaadin.com/docs/latest/components).
-- View use case applications that demonstrate Vaadin capabilities at [vaadin.com/examples-and-demos](https://vaadin.com/examples-and-demos).
-- Build any UI without custom CSS by discovering Vaadin's set of [CSS utility classes](https://vaadin.com/docs/styling/lumo/utility-classes). 
-- Find a collection of solutions to common use cases at [cookbook.vaadin.com](https://cookbook.vaadin.com/).
-- Find add-ons at [vaadin.com/directory](https://vaadin.com/directory).
-- Ask questions on [Stack Overflow](https://stackoverflow.com/questions/tagged/vaadin) or join our [Forum](https://vaadin.com/forum).
-- Report issues, create pull requests in [GitHub](https://github.com/vaadin).
+    - **Administrator**: Manages user roles and access rights.
 
+    - **Merchant**: Submits transactions for validation.
 
-## Deploying using Docker
+    - **Support**: Reviews and provides feedback on transactions.
 
-To build the Dockerized version of the project, run
+- This structure ensures that users have access only to functionalities pertinent to their roles, enhancing security and
+  operational efficiency.
 
-```
-mvn clean package -Pproduction
-docker build . -t transaction-system:latest
+## Running the Application
+
+Execute the following command:
+
+```bash
+./mvnw clean spring-boot:run
 ```
 
-Once the Docker image is correctly built, you can test it locally using
+The application will start, and you can access it at `http://localhost:8080`.
 
-```
-docker run -p 8080:8080 transaction-system:latest
-```
+### Using Docker
+
+If you prefer to run the application in a Docker container:
+
+1. **Build the Docker Image**:
+
+   ```bash
+   docker build -t transaction-system:latest .
+   ```
+
+2. **Run the Docker Container**:
+
+   ```bash
+   docker run -p 8080:8080 transaction-system:latest
+   ```
+
+The application will be available at `http://localhost:8080`.
