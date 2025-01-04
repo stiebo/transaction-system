@@ -61,6 +61,7 @@ If you prefer to run the application in a Docker container:
 1. **Build the Docker Image**:
 
    ```bash
+   ./mvnw clean package -Pproduction
    docker build -t transaction-system:latest .
    ```
 
